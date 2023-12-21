@@ -1,41 +1,45 @@
 import { cn } from '@/lib/utils';
-import { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes, forwardRef } from 'react';
 
 type RadiusType = 'top' | 'bottom' | 'all' | 'none';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-    error?: boolean;
-    errorMessage?: string;
-    rounded?: RadiusType;
+  isError?: boolean;
+  errors?: [];
+  rounded?: RadiusType;
 }
 
-export default function Input({
-    type,
-    className,
-    rounded = 'all',
-    error,
-    errorMessage,
-    ...props
-}: InputProps) {
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  (
+    { type, className, rounded = 'all', isError = false, errors, ...props },
+    ref
+  ) => {
     return (
-        <div className='flex-1'>
-            <input
-                type={type}
-                className={cn(
-                    'block w-full h-9 px-2 py-1 border border-slate-300 focus-within:border-indigo-900 focus-visible:outline-indigo-900 focus:outline-2 focus:outline-offset-0 placeholder:text-slate-500 placeholder:capitalize',
-                    className,
-                    { 'rounded-md': rounded === 'all' },
-                    { 'rounded-none': rounded === 'none' },
-                    { 'rounded-t-md': rounded === 'top' },
-                    { 'rounded-b-md': rounded === 'bottom' }
-                )}
-                {...props}
-            />
-            {error && (
-                <div>
-                    <span>{errorMessage}</span>
-                </div>
-            )}
-        </div>
+      <div className='space-y-0.5'>
+        <input
+          type={type}
+          className={cn(
+            'block w-full h-9 px-2 py-1.5 border-main',
+            'focus-main placeholder:text-slate-500 placeholder:text-sm',
+            className,
+            { 'rounded-md': rounded === 'all' },
+            { 'rounded-none': rounded === 'none' },
+            { 'rounded-t-md': rounded === 'top' },
+            { 'rounded-b-md': rounded === 'bottom' }
+          )}
+          ref={ref}
+          {...props}
+        />
+        {isError && (
+          <div className='bg-red-500 px-2 py-1 rounded-md'>
+            <span className='text-white'>{errors}</span>
+          </div>
+        )}
+      </div>
     );
-}
+  }
+);
+
+Input.displayName = 'Input';
+
+export default Input;

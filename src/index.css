@@ -2,8 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
 @layer base {
-    body {
-        @apply bg-slate-100;
-    }
+  body {
+    @apply bg-slate-100;
+  }
+
+  .focus-main {
+    @apply focus-visible:ring-indigo-600 focus-visible:outline-none focus-visible:ring focus-visible:ring-offset-0;
+  }
+
+  .border-main {
+    @apply border border-slate-300;
+  }
+}
+
+@layer components {
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    @apply bg-white;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-500 rounded-md;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-700;
+  }
 }

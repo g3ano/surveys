@@ -1,30 +1,39 @@
 import axiosClient from '@/lib/axios';
 import { useEffect, useState } from 'react';
+import { useAuth } from './useAuth';
 
-export default function useFetch(endpoint: string) {
-    const [data, setData] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [errors, setErrors] = useState([]);
+export default function useGet(endpoint: string) {
+  const [data, setData] = useState<any>([]);
+  const [errors, setErrors] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const { token, setToken } = useAuth();
 
-    useEffect(() => {
-        setIsLoading(true);
-        axiosClient
-            .get(endpoint)
-            .then((res) => {
-                setData(res.data);
-                setIsLoading(false);
-            })
-            .catch((err) => {
-                setIsError(true);
-                setErrors(err.response);
-            });
-    }, [endpoint]);
+  useEffect(() => {
+    setIsLoading(true);
+    setIsError(false);
+    setIsSuccess(false);
 
-    return {
-        data,
-        error: isError,
-        errors,
-        isLoading,
-    };
+    axiosClient
+      .get(endpoint)
+      .then((res) => {
+        setData(res.data);
+        setIsSuccess(true);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsError(true);
+        setErrors(err.response);
+        setIsLoading(false);
+      });
+  }, [endpoint, token, setToken]);
+
+  return {
+    isError,
+    isLoading,
+    isSuccess,
+    errors,
+    data,
+  };
 }

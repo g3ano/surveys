@@ -1,96 +1,89 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
-import Button from '../ui/button';
-import Input from './input';
-import { useAuth } from '@/hooks/useAuth';
+import Input from '@/components/form/input';
+import Button from '@/components/ui/button';
+import { errorType, formDataType } from '@/pages/register';
 
-export default function RegisterForm() {
-    const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-    });
-    const [isLoading, setIsLoading] = useState(false);
-    const { setToken } = useAuth();
+interface RegisterFormProps {
+  formData: formDataType;
+  setFormData: React.Dispatch<React.SetStateAction<formDataType>>;
+  handleSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  isLoading: boolean;
+  errors: errorType;
+  usernameRef: React.MutableRefObject<any>;
+}
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        const { name, value } = e.target;
+export default function RegisterForm({
+  formData,
+  setFormData,
+  handleSubmit,
+  isLoading,
+  errors,
+  usernameRef,
+}: RegisterFormProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-        console.log(formData);
-    };
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-    };
-
-    return (
-        <div className='bg-slate-100'>
-            <form onSubmit={handleSubmit}>
-                <div className='w-96 rounded-md'>
-                    <div className='flex items-center'>
-                        <Input
-                            type='text'
-                            id='username'
-                            name='username'
-                            value={formData.username}
-                            onChange={handleChange}
-                            placeholder='username'
-                            rounded='top'
-                        />
-                    </div>
-                    <div>
-                        <Input
-                            type='email'
-                            id='email'
-                            name='email'
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder='email'
-                            rounded='none'
-                            className='border-y-transparent'
-                        />
-                    </div>
-                    <div>
-                        <Input
-                            type='password'
-                            id='password'
-                            name='password'
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder='password'
-                            rounded='none'
-                            className='border-b-transparent'
-                        />
-                    </div>
-                    <div>
-                        <Input
-                            type='password'
-                            id='password_confirmation'
-                            name='password_confirmation'
-                            value={formData.password_confirmation}
-                            onChange={handleChange}
-                            placeholder='password confirmation'
-                            rounded='bottom'
-                        />
-                    </div>
-                    <div className='mt-8'>
-                        <div className='flex items-center justify-between'>
-                            <Button
-                                className='w-full'
-                                disabled={isLoading}
-                            >
-                                {!isLoading && <span>Register</span>}
-                                {isLoading && <span>loading...</span>}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+  return (
+    <div className='bg-inherit'>
+      <form>
+        <div className='w-96 rounded-md space-y-2'>
+          <Input
+            type='text'
+            id='username'
+            name='username'
+            required
+            value={formData.username}
+            onChange={handleChange}
+            placeholder='username'
+            ref={usernameRef}
+            isError={Boolean(errors.username)}
+            errors={errors.username}
+          />
+          <Input
+            type='email'
+            id='email'
+            name='email'
+            value={formData.email}
+            onChange={handleChange}
+            placeholder='email'
+            isError={Boolean(errors.email)}
+            errors={errors.email}
+          />
+          <Input
+            type='password'
+            id='password'
+            name='password'
+            value={formData.password}
+            onChange={handleChange}
+            placeholder='password'
+            isError={Boolean(errors.password)}
+            errors={errors.password}
+          />
+          <Input
+            type='password'
+            id='password_confirmation'
+            name='password_confirmation'
+            value={formData.password_confirmation}
+            onChange={handleChange}
+            placeholder='password confirmation'
+          />
         </div>
-    );
+        <div className='mt-4'>
+          <div className='flex items-center justify-between'>
+            <Button
+              className='w-full'
+              onClick={handleSubmit}
+            >
+              {!isLoading && <span>Register</span>}
+              {isLoading && <span>sending...</span>}
+            </Button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
 }
