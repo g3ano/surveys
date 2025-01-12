@@ -54,7 +54,7 @@ export default function DefaultLayout() {
           <nav className='flex items-center py-2'>
             <div className='flex items-center gap-10'>
               <div className='flex items-center'>
-                <span className='font-bold text-xl inline-block uppercase tracking-tight'>
+                <span className='font-semibold text-xl inline-block uppercase tracking-tight'>
                   Surveys Editor
                 </span>
               </div>

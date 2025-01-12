@@ -6,6 +6,7 @@ import { useSurvey } from '@/hooks/useSurveyData';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import Icon from '@/components/ui/icon';
 import Button from '@/components/ui/button';
+import { useState } from 'react';
 
 type SurveyFormProps = {
   errors?: SurveyFormErrors;
@@ -21,9 +22,10 @@ export default function SurveyForm({ errors }: SurveyFormProps) {
       [name]: value,
     }));
   };
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -36,7 +38,9 @@ export default function SurveyForm({ errors }: SurveyFormProps) {
       e.target.value = '';
     };
     reader.readAsDataURL(file);
+    console.log(reader);
   };
+  console.log(isLoading);
 
   return (
     <form>
